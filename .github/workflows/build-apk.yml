@@ -31,6 +31,16 @@ jobs:
           test -f CarbCycleCompanion_Android_Source/app/build.gradle
           test -f CarbCycleCompanion_Android_Source/app/src/main/AndroidManifest.xml
 
+          # Android WebView can let the author .modal { display:flex } rule override
+          # the HTML hidden attribute. This caused an empty modal sheet to cover the
+          # app on first launch and made the X appear not to work.
+          cat >> CarbCycleCompanion_Android_Source/app/src/main/assets/styles.css <<'EOF'
+
+          /* Native Android modal visibility fix */
+          .modal[hidden]{display:none!important}
+          .modal:not([hidden]){display:flex}
+          EOF
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
