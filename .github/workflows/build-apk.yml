@@ -82,10 +82,27 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Restore stable ShredCycle signing key
+      - name: Restore ShredCycle signing cache
+        uses: actions/cache@v4
+        with:
+          path: .shredcycle-signing
+          key: shredcycle-debug-signing-v1
+
+      - name: Prepare stable ShredCycle signing key
         run: |
-          mkdir -p ~/.android
-          base64 -d debug-keystore.b64 > ~/.android/debug.keystore
+          mkdir -p .shredcycle-signing ~/.android
+          if [ ! -f .shredcycle-signing/debug.keystore ]; then
+            keytool -genkeypair -v \
+              -keystore .shredcycle-signing/debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=ShredCycle Debug,O=ShredCycle,C=AU"
+          fi
+          cp .shredcycle-signing/debug.keystore ~/.android/debug.keystore
           chmod 600 ~/.android/debug.keystore
           keytool -list -keystore ~/.android/debug.keystore -storepass android >/dev/null
 
