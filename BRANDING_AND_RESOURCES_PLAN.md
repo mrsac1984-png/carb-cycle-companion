@@ -81,3 +81,9 @@ Use the official V Shred FLE-style HIIT guidance:
 - Include an "Open official V Shred workout/video" button
 
 Do not rebuild APK until the Guides screen and branding assets are finalized.
+
+
+## ShredCycle v2 build verification
+- Android 16 / Galaxy S25 Ultra candidate build generated successfully.
+- Signing key is now generated once and retained by the GitHub Actions signing cache for future in-place ShredCycle updates.
+- The next verification build is intentionally triggered to confirm that signing cache is restored.
