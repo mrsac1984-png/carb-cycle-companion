@@ -36,6 +36,7 @@ jobs:
           unzip -o -q shredcycle-v2-overlay.zip -d CarbCycleCompanion_Android_Source
 
           # Use the approved ShredCycle mark everywhere the Android/PWA shell expects an icon.
+          rm -f CarbCycleCompanion_Android_Source/app/src/main/res/drawable/app_icon.xml
           cp CarbCycleCompanion_Android_Source/app/src/main/assets/assets/shredcycle-icon.png \
              CarbCycleCompanion_Android_Source/app/src/main/res/drawable/app_icon.png
           cp CarbCycleCompanion_Android_Source/app/src/main/assets/assets/shredcycle-icon.png \
@@ -81,11 +82,12 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Reuse Android debug signing key
-        uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: carb-cycle-companion-debug-signing-v1
+      - name: Restore stable ShredCycle signing key
+        run: |
+          mkdir -p ~/.android
+          base64 -d debug-keystore.b64 > ~/.android/debug.keystore
+          chmod 600 ~/.android/debug.keystore
+          keytool -list -keystore ~/.android/debug.keystore -storepass android >/dev/null
 
       - name: Build ShredCycle v2 APK
         working-directory: CarbCycleCompanion_Android_Source
