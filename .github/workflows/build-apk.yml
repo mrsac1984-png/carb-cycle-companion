@@ -20,7 +20,7 @@ jobs:
 
       - name: Reconstruct Android project
         run: |
-          cat source.b64.part1 source.b64.part2 source.b64.part3 source.b64.part4 | tr -d '\n\r' | base64 -d > source-fixed.zip
+          cat minnav4_part1.txt minnav4_part2.txt minnav4_part3.txt minnav4_part4.txt | tr -d '\n\r' | base64 -d > source-fixed.zip
           unzip -o -q source-fixed.zip || true
           cat > CarbCycleCompanion_Android_Source/settings.gradle <<'EOF'
           pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
@@ -64,11 +64,11 @@ jobs:
         run: gradle --no-daemon :app:assembleDebug
 
       - name: Rename APK
-        run: cp CarbCycleCompanion_Android_Source/app/build/outputs/apk/debug/app-debug.apk Carb-Cycle-Companion-S25-Ultra.apk
+        run: cp CarbCycleCompanion_Android_Source/app/build/outputs/apk/debug/app-debug.apk Carb-Cycle-Companion-S25-Ultra-TopNav.apk
 
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: Carb-Cycle-Companion-S25-Ultra-APK
-          path: Carb-Cycle-Companion-S25-Ultra.apk
+          name: Carb-Cycle-Companion-S25-Ultra-TopNav-APK
+          path: Carb-Cycle-Companion-S25-Ultra-TopNav.apk
           if-no-files-found: error
