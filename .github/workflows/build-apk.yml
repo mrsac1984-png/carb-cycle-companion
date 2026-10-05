@@ -15,8 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unpack Android project
-        run: unzip -q source.zip
+      - name: Reconstruct Android project
+        run: |
+          cat source.b64.part1 source.b64.part2 source.b64.part3 source.b64.part4 | tr -d '\n\r' | base64 -d > source-fixed.zip
+          unzip -t source-fixed.zip
+          unzip -q source-fixed.zip
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
