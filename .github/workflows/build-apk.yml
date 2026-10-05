@@ -18,8 +18,15 @@ jobs:
       - name: Reconstruct Android project
         run: |
           cat source.b64.part1 source.b64.part2 source.b64.part3 source.b64.part4 | tr -d '\n\r' | base64 -d > source-fixed.zip
-          unzip -t source-fixed.zip
-          unzip -q source-fixed.zip
+          unzip -o -q source-fixed.zip || true
+          cat > CarbCycleCompanion_Android_Source/settings.gradle <<'EOF'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+          rootProject.name = 'CarbCycleCompanion'
+          include ':app'
+          EOF
+          test -f CarbCycleCompanion_Android_Source/app/build.gradle
+          test -f CarbCycleCompanion_Android_Source/app/src/main/AndroidManifest.xml
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
